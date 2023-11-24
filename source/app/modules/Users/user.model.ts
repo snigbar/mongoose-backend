@@ -22,17 +22,16 @@ const UserSchema = new Schema<User>({
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
   },
-  age: { type: Number, required: true, unique: true },
-  email: { type: String, required: true },
+  age: { type: Number, required: true },
+  email: { type: String, required: true, unique: true },
   isActive: { type: Boolean, default: true },
   hobbies: [String],
   address: {
-    street: String,
-    city: String,
-    country: String,
-    required: true,
+    street: { type: String, required: true },
+    city: { type: String, required: true },
+    country: { type: String, required: true },
   },
   orders: [OrderSchema],
 })
 
-export default model<User>('users', UserSchema)
+export const UserModel = model<User>('users', UserSchema)
