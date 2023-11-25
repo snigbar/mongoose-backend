@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import UserValidationSchema, {
   UserUpateValidationSchema,
+  orderSchema,
 } from './user.validation'
 import useServices from './use.services'
 
@@ -108,10 +109,60 @@ const deleteUserById = async (req: Request, res: Response) => {
   }
 }
 
+const addAProductToOrders = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params
+    const user = await useServices.findAnUser(Number(userId))
+    if (!user) {
+      throw new Error('No user found')
+    }
+    const data = req.body
+    const validatedData = orderSchema.parse(data)
+    await useServices.addAProduct(Number(userId), validatedData)
+    res.status(200).json({
+      success: true,
+      message: 'Order created successfully!',
+      data: null,
+    })
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || 'something went wrong',
+      error: err,
+    })
+  }
+}
+
+const getUserOrders = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params
+    const user = await useServices.findAnUser(Number(userId))
+    if (!user) {
+      throw new Error('No user found')
+    }
+
+    const result = await useServices.getOrdersOfUser(Number(userId))
+
+    res.status(200).json({
+      success: true,
+      message: 'Order fetched successfully!',
+      data: result,
+    })
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || 'something went wrong',
+      error: err,
+    })
+  }
+}
+
 export default {
   insertUserInDB,
   getAllUser,
   getUserById,
   updateUserById,
   deleteUserById,
+  addAProductToOrders,
+  getUserOrders,
 }

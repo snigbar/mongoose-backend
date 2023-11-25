@@ -1,5 +1,5 @@
 import { UserModel } from './user.model'
-import { User } from './users.interface'
+import { Order, User } from './users.interface'
 
 const createNewUser = async (data: User) => {
   const ifExists = await UserModel.findOne({ userId: data.userId })
@@ -17,12 +17,26 @@ const findAnUser = async (id: number) => {
   return await UserModel.findOne({ userId: id })
 }
 
-const UpdateAnUser = async (id: number, doc: object) => {
+const UpdateAnUser = async (id: number, doc: User) => {
   return await UserModel.findOneAndUpdate({ userId: id }, doc, { new: true })
 }
 
 const deleteOne = async (id: number) => {
   return await UserModel.deleteOne({ userId: id })
+}
+
+const addAProduct = async (id: number, product: Order) => {
+  return await UserModel.updateOne(
+    { userId: id },
+    { $push: { orders: product } },
+  )
+}
+
+const getOrdersOfUser = async (id: number) => {
+  return await UserModel.aggregate([
+    { $match: { userId: id } },
+    { $project: { _id: 0, orders: 1 } },
+  ])
 }
 
 export default {
@@ -31,4 +45,6 @@ export default {
   findAnUser,
   UpdateAnUser,
   deleteOne,
+  addAProduct,
+  getOrdersOfUser,
 }

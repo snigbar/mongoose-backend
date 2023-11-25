@@ -1,5 +1,4 @@
 import { z, ZodType } from 'zod'
-import { User } from './users.interface'
 
 const fullNameSchema = z.object({
   firstName: z.string({
@@ -18,13 +17,13 @@ const addressSchema = z.object({
   country: z.string(),
 })
 
-const orderSchema = z.object({
+export const orderSchema = z.object({
   productName: z.string(),
   price: z.number().gt(0),
   quantity: z.number().gt(0),
 })
 
-const UserValidationSchema: ZodType<User> = z.object({
+const UserValidationSchema: ZodType = z.object({
   userId: z.number(),
   username: z.string(),
   password: z.string().max(20).min(8),
@@ -36,7 +35,7 @@ const UserValidationSchema: ZodType<User> = z.object({
   isActive: z.boolean(),
   hobbies: z.array(z.string()),
   address: addressSchema,
-  orders: z.array(orderSchema),
+  orders: z.array(orderSchema).optional(),
 })
 
 export const UserUpateValidationSchema: ZodType = z.object({
@@ -51,7 +50,7 @@ export const UserUpateValidationSchema: ZodType = z.object({
   isActive: z.boolean(),
   hobbies: z.array(z.string()),
   address: addressSchema,
-  orders: z.array(orderSchema),
+  orders: z.array(orderSchema).optional(),
 })
 
 export default UserValidationSchema
