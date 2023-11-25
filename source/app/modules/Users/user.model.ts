@@ -1,5 +1,7 @@
 import { Schema, model } from 'mongoose'
 import { Order, User } from './users.interface'
+import bcrypt from 'bcrypt'
+import config from '../../config/config'
 
 const OrderSchema = new Schema<Order>({
   productName: { type: String, required: true },
@@ -32,6 +34,19 @@ const UserSchema = new Schema<User>({
     country: { type: String, required: true },
   },
   orders: [OrderSchema],
+})
+
+UserSchema.pre('save', async function (next) {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this // doc
+  // create hashed password
+  user.password = await bcrypt.hash(user.password, Number(config.saltRound))
+  next()
+})
+
+UserSchema.post('save', function (result, next) {
+  result.password = ''
+  next()
 })
 
 export const UserModel = model<User>('users', UserSchema)
