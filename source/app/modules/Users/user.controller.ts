@@ -85,9 +85,33 @@ const updateUserById = async (req: Request, res: Response) => {
   }
 }
 
+const deleteUserById = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params
+    const user = await useServices.findAnUser(Number(userId))
+    if (!user) {
+      throw new Error('No user found')
+    }
+
+    await useServices.deleteOne(Number(userId))
+    res.status(200).json({
+      success: true,
+      message: 'User deleted successfully',
+      data: null,
+    })
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || 'something went wrong',
+      error: err,
+    })
+  }
+}
+
 export default {
   insertUserInDB,
   getAllUser,
   getUserById,
   updateUserById,
+  deleteUserById,
 }
