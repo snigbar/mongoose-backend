@@ -37,7 +37,29 @@ const getAllUser = async (req: Request, res: Response) => {
   }
 }
 
+const getUserById = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params
+    const result = await useServices.findAnUser(Number(userId))
+    if (!result) {
+      throw new Error('No user found')
+    }
+    res.status(200).json({
+      success: true,
+      message: 'User Found',
+      data: result,
+    })
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || 'something went wrong',
+      error: err,
+    })
+  }
+}
+
 export default {
   insertUserInDB,
   getAllUser,
+  getUserById,
 }

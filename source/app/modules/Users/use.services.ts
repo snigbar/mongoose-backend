@@ -13,7 +13,12 @@ const findAllUsers = async () => {
   return await UserModel.find({}, 'username fullName age email address')
 }
 
+const findAnUser = async (id: number) => {
+  return await UserModel.findOne({ userId: id })
+}
+
 export default {
   createNewUser,
   findAllUsers,
+  findAnUser,
 }
