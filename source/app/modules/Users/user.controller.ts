@@ -20,6 +20,24 @@ const insertUserInDB = async (req: Request, res: Response) => {
   }
 }
 
+const getAllUser = async (req: Request, res: Response) => {
+  try {
+    const result = await useServices.findAllUsers()
+    res.status(200).json({
+      success: true,
+      message: 'Retrived all users',
+      data: result,
+    })
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || 'something went wrong',
+      error: err,
+    })
+  }
+}
+
 export default {
   insertUserInDB,
+  getAllUser,
 }

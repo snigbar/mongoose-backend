@@ -9,6 +9,11 @@ const createNewUser = async (data: User) => {
   return result
 }
 
+const findAllUsers = async () => {
+  return await UserModel.find({}, 'username fullName age email address')
+}
+
 export default {
   createNewUser,
+  findAllUsers,
 }
