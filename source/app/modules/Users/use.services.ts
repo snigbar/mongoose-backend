@@ -39,6 +39,18 @@ const getOrdersOfUser = async (id: number) => {
   ])
 }
 
+const totalPriceOfUser = async (id: number) => {
+  return await UserModel.aggregate([
+    { $match: { userId: id } },
+    { $unwind: '$orders' },
+    {
+      $group: { _id: null, totalPrice: { $sum: '$orders.price' } },
+    },
+    {
+      $project: { _id: 0, totalPrice: 1 },
+    },
+  ])
+}
 export default {
   createNewUser,
   findAllUsers,
@@ -47,4 +59,5 @@ export default {
   deleteOne,
   addAProduct,
   getOrdersOfUser,
+  totalPriceOfUser,
 }

@@ -157,6 +157,30 @@ const getUserOrders = async (req: Request, res: Response) => {
   }
 }
 
+const calculateTheSumOfUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params
+    const user = await useServices.findAnUser(Number(userId))
+    if (!user) {
+      throw new Error('No user found')
+    }
+
+    const result = await useServices.totalPriceOfUser(Number(userId))
+
+    res.status(200).json({
+      success: true,
+      message: 'Total price calculated successfully!',
+      data: result,
+    })
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || 'something went wrong',
+      error: err,
+    })
+  }
+}
+
 export default {
   insertUserInDB,
   getAllUser,
@@ -165,4 +189,5 @@ export default {
   deleteUserById,
   addAProductToOrders,
   getUserOrders,
+  calculateTheSumOfUser,
 }
