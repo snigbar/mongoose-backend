@@ -39,4 +39,19 @@ const UserValidationSchema: ZodType<User> = z.object({
   orders: z.array(orderSchema),
 })
 
+export const UserUpateValidationSchema: ZodType = z.object({
+  userId: z.number(),
+  username: z.string(),
+  password: z.string().max(20).min(8).optional(),
+  fullName: fullNameSchema,
+  age: z.number(),
+  email: z.string().email({
+    message: 'Invalid email format. Please provide a valid email address.',
+  }),
+  isActive: z.boolean(),
+  hobbies: z.array(z.string()),
+  address: addressSchema,
+  orders: z.array(orderSchema),
+})
+
 export default UserValidationSchema

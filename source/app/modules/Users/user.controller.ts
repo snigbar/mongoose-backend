@@ -1,5 +1,7 @@
 import { Request, Response } from 'express'
-import UserValidationSchema from './user.validation'
+import UserValidationSchema, {
+  UserUpateValidationSchema,
+} from './user.validation'
 import useServices from './use.services'
 
 const insertUserInDB = async (req: Request, res: Response) => {
@@ -58,8 +60,34 @@ const getUserById = async (req: Request, res: Response) => {
   }
 }
 
+const updateUserById = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params
+    const doc = req.body
+    const validatedData = UserUpateValidationSchema.parse(doc)
+    const user = await useServices.findAnUser(Number(userId))
+    if (!user) {
+      throw new Error('No user found')
+    }
+
+    const result = await useServices.UpdateAnUser(Number(userId), validatedData)
+    res.status(200).json({
+      success: true,
+      message: 'User updated successfully!',
+      data: result,
+    })
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || 'something went wrong',
+      error: err,
+    })
+  }
+}
+
 export default {
   insertUserInDB,
   getAllUser,
   getUserById,
+  updateUserById,
 }

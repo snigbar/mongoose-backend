@@ -17,8 +17,13 @@ const findAnUser = async (id: number) => {
   return await UserModel.findOne({ userId: id })
 }
 
+const UpdateAnUser = async (id: number, doc: object) => {
+  return await UserModel.findOneAndUpdate({ userId: id }, doc, { new: true })
+}
+
 export default {
   createNewUser,
   findAllUsers,
   findAnUser,
+  UpdateAnUser,
 }

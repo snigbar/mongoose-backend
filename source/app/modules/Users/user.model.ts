@@ -49,4 +49,13 @@ UserSchema.post('save', function (result, next) {
   next()
 })
 
+UserSchema.post('save', function (result, next) {
+  result.password = ''
+  next()
+})
+UserSchema.post('findOneAndUpdate', function (result, next) {
+  result.password = ''
+  next()
+})
+
 export const UserModel = model<User>('users', UserSchema)
